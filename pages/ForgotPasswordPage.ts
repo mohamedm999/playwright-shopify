@@ -1,4 +1,4 @@
-import type { Locator, Page } from '@playwright/test';
+import { Page, Locator } from '@playwright/test';
 
 export class ForgotPasswordPage {
   readonly page: Page;
@@ -8,6 +8,7 @@ export class ForgotPasswordPage {
 
   constructor(page: Page) {
     this.page = page;
+
     this.emailInput = page.getByLabel('Email Address');
     this.submitBtn = page.getByRole('button', { name: /submit|reset|send/i });
     this.successMessage = page.getByText(/sent|email|reset/i);
@@ -15,7 +16,9 @@ export class ForgotPasswordPage {
 
   async goto(): Promise<void> {
     await this.page.goto('/account/login');
-    await this.page.getByText('Forgot your password?').click();
+    // Click forgot password link from login page
+    const forgotLink = this.page.getByText('Forgot your password?');
+    await forgotLink.click();
   }
 
   async requestReset(email: string): Promise<void> {
