@@ -1,23 +1,25 @@
 import type { Locator, Page } from '@playwright/test';
-import { env } from '../config/env';
 
 export class ForgotPasswordPage {
   readonly page: Page;
   readonly emailInput: Locator;
-  readonly submitButton: Locator;
+  readonly submitBtn: Locator;
+  readonly successMessage: Locator;
 
   constructor(page: Page) {
     this.page = page;
-    this.emailInput = page.getByLabel(/email/i);
-    this.submitButton = page.getByRole('button', { name: /reset|send|submit/i });
+    this.emailInput = page.getByLabel('Email Address');
+    this.submitBtn = page.getByRole('button', { name: /submit|reset|send/i });
+    this.successMessage = page.getByText(/sent|email|reset/i);
   }
 
-  async goto() {
-    await this.page.goto(env.forgotPasswordPath);
+  async goto(): Promise<void> {
+    await this.page.goto('/account/login');
+    await this.page.getByText('Forgot your password?').click();
   }
 
-  async requestReset(email: string) {
+  async requestReset(email: string): Promise<void> {
     await this.emailInput.fill(email);
-    await this.submitButton.click();
+    await this.submitBtn.click();
   }
 }

@@ -13,13 +13,13 @@ test.describe('Login', () => {
 
     await expect(loginPage.emailInput).toBeVisible();
     await expect(loginPage.passwordInput).toBeVisible();
-    await expect(loginPage.submitButton).toBeVisible();
+    await expect(loginPage.loginBtn).toBeVisible();
   });
 
   test('validates required fields', async ({ page }) => {
     const loginPage = new LoginPage(page);
 
-    await loginPage.submit();
+    await loginPage.clickLogin();
 
     await expect(loginPage.emailInput).toBeVisible();
     await expect(loginPage.passwordInput).toBeVisible();
@@ -39,7 +39,7 @@ test.describe('Login', () => {
 
       await loginPage.login(payload.value, payload.value);
 
-      await expect(loginPage.submitButton).toBeVisible();
+      await expect(loginPage.loginBtn).toBeVisible();
     });
   }
 });

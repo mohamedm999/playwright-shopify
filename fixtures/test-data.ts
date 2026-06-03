@@ -1,7 +1,9 @@
+import { env } from '../config/env';
+
 export const users = {
   valid: {
-    email: process.env.TEST_USER_EMAIL ?? 'customer@example.com',
-    password: process.env.TEST_USER_PASSWORD ?? 'Password123!',
+    email: env.EMAIL,
+    password: env.PASSWORD,
   },
   invalid: {
     email: 'invalid@example.com',
