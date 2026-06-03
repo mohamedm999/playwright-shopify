@@ -12,7 +12,7 @@ test.describe('Forgot password', () => {
     const forgotPasswordPage = new ForgotPasswordPage(page);
 
     await expect(forgotPasswordPage.emailInput).toBeVisible();
-    await expect(forgotPasswordPage.submitButton).toBeVisible();
+    await expect(forgotPasswordPage.submitBtn).toBeVisible();
   });
 
   test('submits reset request for registered email', async ({ page }) => {
