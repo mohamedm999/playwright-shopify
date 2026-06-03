@@ -1,4 +1,4 @@
-import type { Locator, Page } from '@playwright/test';
+import { Page, Locator } from '@playwright/test';
 
 export class LoginPage {
   readonly page: Page;
@@ -10,6 +10,8 @@ export class LoginPage {
 
   constructor(page: Page) {
     this.page = page;
+
+    // Semantic locators — ordered by preference
     this.emailInput = page.getByLabel('Email Address');
     this.passwordInput = page.getByLabel('Password');
     this.loginBtn = page.getByRole('button', { name: /sign in|log in|login/i });
@@ -17,16 +19,19 @@ export class LoginPage {
     this.errorMessage = page.getByRole('alert');
   }
 
+  // Navigation method
   async goto(): Promise<void> {
     await this.page.goto('/account/login');
   }
 
+  // Action method — composite action
   async login(email: string, password: string): Promise<void> {
     await this.emailInput.fill(email);
     await this.passwordInput.fill(password);
-    await this.clickLogin();
+    await this.loginBtn.click();
   }
 
+  // Action method — individual actions for granular test control
   async fillEmail(email: string): Promise<void> {
     await this.emailInput.fill(email);
   }
