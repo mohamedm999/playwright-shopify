@@ -1,16 +1,25 @@
 {
   "name": "playwright-shopify",
   "version": "1.0.0",
-  "private": true,
+  "description": "Playwright + TypeScript automation framework for Shopify login",
+  "main": "index.js",
   "scripts": {
-    "test": "playwright test",
-    "test:headed": "playwright test --headed",
-    "test:ui": "playwright test --ui",
-    "report": "playwright show-report"
+    "test": "npx playwright test",
+    "test:headed": "npx playwright test --headed",
+    "test:debug": "npx playwright test --debug",
+    "test:report": "npx playwright show-report",
+    "test:trace": "npx playwright show-trace",
+    "test:chromium": "npx playwright test --project=chromium",
+    "test:firefox": "npx playwright test --project=firefox",
+    "test:webkit": "npx playwright test --project=webkit",
+    "test:mobile": "npx playwright test --project=mobile-chrome --project=mobile-safari"
   },
+  "keywords": ["playwright", "typescript", "shopify", "automation", "testing"],
+  "author": "",
+  "license": "MIT",
   "devDependencies": {
-    "@playwright/test": "^1.60.0",
-    "@types/node": "^20.19.41",
-    "typescript": "^5.9.3"
+    "@playwright/test": "^1.40.0",
+    "typescript": "^5.3.0",
+    "@types/node": "^20.0.0"
   }
 }
