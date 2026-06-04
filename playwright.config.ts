@@ -1,5 +1,8 @@
 import { defineConfig, devices } from '@playwright/test';
-import { env } from './config/env';
+import { env, validateEnv } from './config/env';
+
+// Validate environment variables before running any tests
+validateEnv();
 
 export default defineConfig({
   // Test directory

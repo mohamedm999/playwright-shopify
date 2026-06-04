@@ -1,65 +1,49 @@
-import { test, expect } from '@playwright/test';
-import { LoginPage } from '../../pages/LoginPage';
-import { ForgotPasswordPage } from '../../pages/ForgotPasswordPage';
+import { test, expect } from '../../fixtures/page-fixtures';
 import { testData } from '../../fixtures/test-data';
+import { expectRecoverFormVisible, expectResetRequestHandled } from '../../utils/assertions';
 
-test.describe('Forgot Password — Navigation', () => {
-  let loginPage: LoginPage;
-
-  test.beforeEach(async ({ page }) => {
-    loginPage = new LoginPage(page);
-    await loginPage.goto();
+test.describe('Forgot Password - Navigation', () => {
+  test.beforeEach(async ({ pm }) => {
+    await pm.loginPage.goto();
   });
 
-  test('FP-001: Clicking forgot password navigates to reset page', async ({ page }) => {
-    await loginPage.clickForgotPassword();
-    await expect(page).toHaveURL(/\/account\/login/); // Shopify keeps same URL with modal/section
-  });
-});
-
-test.describe('Forgot Password — Reset Flow', () => {
-  let forgotPasswordPage: ForgotPasswordPage;
-
-  test.beforeEach(async ({ page }) => {
-    forgotPasswordPage = new ForgotPasswordPage(page);
-    await forgotPasswordPage.goto();
-  });
-
-  test('FP-002: Valid email shows success message', async () => {
-    await forgotPasswordPage.requestReset(testData.resetEmails.valid);
-    await expect(forgotPasswordPage.successMessage).toBeVisible();
-  });
-
-  test('FP-003: Unregistered email is handled appropriately', async () => {
-    await forgotPasswordPage.requestReset(testData.resetEmails.unregistered);
-    // Many apps show same message for security (don't reveal if email exists)
-    await expect(forgotPasswordPage.successMessage).toBeVisible();
-  });
-
-  test('FP-004: Empty email shows validation error', async () => {
-    await forgotPasswordPage.requestReset(testData.resetEmails.empty);
-    await expect(forgotPasswordPage.emailInput).toBeVisible(); // Still on form
-  });
-
-  test('FP-005: Invalid email format shows validation error', async () => {
-    await forgotPasswordPage.requestReset(testData.resetEmails.invalid);
-    await expect(forgotPasswordPage.emailInput).toBeVisible(); // Still on form
+  test('FP-001: Clicking forgot password shows reset form', async ({ page, pm }) => {
+    await pm.loginPage.clickForgotPassword();
+    await expect(page).toHaveURL(/\/account\/login/);
+    await expectRecoverFormVisible(page, pm.forgotPasswordPage);
   });
 });
 
-test.describe('Forgot Password — Back Navigation', () => {
-  let forgotPasswordPage: ForgotPasswordPage;
-  let loginPage: LoginPage;
-
-  test.beforeEach(async ({ page }) => {
-    forgotPasswordPage = new ForgotPasswordPage(page);
-    loginPage = new LoginPage(page);
+test.describe('Forgot Password - Reset Flow', () => {
+  test.beforeEach(async ({ pm }) => {
+    await pm.forgotPasswordPage.goto();
   });
 
-  test('FP-006: Browser back returns to login page', async ({ page }) => {
-    await loginPage.goto();
-    await loginPage.clickForgotPassword();
-    await page.goBack();
-    await expect(loginPage.emailInput).toBeVisible();
+  test('FP-002: Valid email reset request is handled', async ({ page, pm }) => {
+    await pm.forgotPasswordPage.requestReset(testData.resetEmails.valid);
+    await expectResetRequestHandled(page, pm.forgotPasswordPage);
+  });
+
+  test('FP-003: Unregistered email is handled appropriately', async ({ page, pm }) => {
+    await pm.forgotPasswordPage.requestReset(testData.resetEmails.unregistered);
+    await expectResetRequestHandled(page, pm.forgotPasswordPage);
+  });
+
+  test('FP-004: Empty email remains on reset form', async ({ page, pm }) => {
+    await pm.forgotPasswordPage.requestReset(testData.resetEmails.empty);
+    await expectRecoverFormVisible(page, pm.forgotPasswordPage);
+  });
+
+  test('FP-005: Invalid email format remains on reset form', async ({ page, pm }) => {
+    await pm.forgotPasswordPage.requestReset(testData.resetEmails.invalid);
+    await expectRecoverFormVisible(page, pm.forgotPasswordPage);
+  });
+});
+
+test.describe('Forgot Password - Return Navigation', () => {
+  test('FP-006: Cancel returns to login page', async ({ pm }) => {
+    await pm.forgotPasswordPage.goto();
+    await pm.forgotPasswordPage.cancel();
+    await expect(pm.loginPage.emailInput).toBeVisible();
   });
 });
