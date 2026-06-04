@@ -1,4 +1,4 @@
-import { Page, Locator } from '@playwright/test';
+import { expect, Page, Locator } from '@playwright/test';
 
 export class LoginPage {
   readonly page: Page;
@@ -7,31 +7,44 @@ export class LoginPage {
   readonly loginBtn: Locator;
   readonly forgotPasswordLink: Locator;
   readonly errorMessage: Locator;
+  readonly customerLoginForm: Locator;
+  readonly captchaProtectedLoginForm: Locator;
 
   constructor(page: Page) {
     this.page = page;
 
-    // Semantic locators — ordered by preference
     this.emailInput = page.getByLabel('Email Address');
     this.passwordInput = page.getByLabel('Password');
-    this.loginBtn = page.getByRole('button', { name: /sign in|log in|login/i });
+    this.customerLoginForm = page.locator('form#customer_login');
+    this.loginBtn = this.customerLoginForm.getByRole('button', { name: /sign in/i });
     this.forgotPasswordLink = page.getByText('Forgot your password?');
-    this.errorMessage = page.getByRole('alert');
+    this.errorMessage = page.locator('.errors, [role="alert"]');
+    this.captchaProtectedLoginForm = page.locator(
+      'form#customer_login[data-cptcha="true"][data-hcaptcha-bound="true"]',
+    );
   }
 
-  // Navigation method
   async goto(): Promise<void> {
     await this.page.goto('/account/login');
   }
-
-  // Action method — composite action
+ 
   async login(email: string, password: string): Promise<void> {
     await this.emailInput.fill(email);
     await this.passwordInput.fill(password);
     await this.loginBtn.click();
   }
 
-  // Action method — individual actions for granular test control
+  async expectLoginRejected(): Promise<void> {
+    await expect(this.page).toHaveURL(/\/account\/login/);
+
+    if (await this.errorMessage.count()) {
+      await expect(this.errorMessage.first()).toBeVisible();
+      return;
+    }
+
+    await expect(this.captchaProtectedLoginForm).toBeAttached();
+  }
+
   async fillEmail(email: string): Promise<void> {
     await this.emailInput.fill(email);
   }
