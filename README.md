@@ -1,40 +1,81 @@
-# Playwright Shopify
+# Playwright Shopify Automation Framework
 
-Playwright test automation scaffold for Shopify storefront account flows.
+A production-grade, scalable Playwright + TypeScript test automation framework designed for testing Shopify storefront flows (such as account registration and login).
 
-## Structure
+## 🚀 Key Features
 
-- `tests/` contains Playwright specs grouped by feature.
-- `pages/` contains Page Object Model classes.
-- `fixtures/` contains test data separated from test logic.
-- `utils/` contains reusable helpers.
-- `config/` contains environment configuration.
-- `.github/workflows/` contains the CI pipeline.
+- **Advanced Page Object Model (POM)**: Leverages a `BasePage` class for common browser interactions and a `PageManager` for centralized page instantiation.
+- **Custom Test Fixtures**: Built-in Playwright fixtures (like `pm` for PageManager) provide clean, low-boilerplate test orchestration.
+- **Strict Separation of Concerns**: 
+  - Locators and actions belong in `pages/`.
+  - Assertions and logic belong in `tests/` or `utils/assertions.ts`.
+  - Test data belongs in `fixtures/test-data.ts`.
+- **Structured Logging**: Custom `Logger` utility captures timestamped, categorized execution logs for superior observability.
+- **Environment Validation**: Fail-fast environment configuration through `config/env.ts` ensures tests never run with missing credentials or misconfigured URLs.
+- **Data-Driven & Security Testing**: Built-in support for parameterized tests and common security/exploratory attack vectors (e.g., SQLi, XSS).
 
-## Setup
+## 📁 Project Structure
 
-```bash
-npm install
-npx playwright install
-cp .env.example .env
+```text
+playwright-shopify/
+├── config/              # Environment variables and validation (env.ts)
+├── fixtures/            # Test data and custom Playwright fixtures
+├── pages/               # Page Object Models (BasePage, LoginPage, PageManager)
+├── tests/               # Test spec files organized by feature
+├── utils/               # Helpers, loggers, and custom assertions
+├── playwright.config.ts # Core Playwright configuration
+└── README.md            # You are here
 ```
 
-Update `.env` with the target Shopify store URL and test credentials.
+## 🛠️ Setup Instructions
 
-## Run Tests
+1. **Install Dependencies**
+   ```bash
+   npm install
+   ```
 
-```bash
-npm test
-```
+2. **Install Playwright Browsers**
+   ```bash
+   npx playwright install
+   ```
 
-Run headed mode:
+3. **Configure Environment**
+   Copy the example environment file and update it with your target Shopify store URL and valid test credentials.
+   ```bash
+   cp .env.example .env
+   ```
 
-```bash
-npm run test:headed
-```
+## 🏃 Running Tests
 
-Open the HTML report:
+The project includes several pre-configured npm scripts in `package.json`:
 
-```bash
-npm run report
-```
+- **Run all tests (headless)**
+  ```bash
+  npm test
+  ```
+
+- **Run tests in UI/headed mode**
+  ```bash
+  npm run test:headed
+  ```
+
+- **Run tests in debug mode**
+  ```bash
+  npm run test:debug
+  ```
+
+- **View HTML Test Report**
+  ```bash
+  npm run test:report
+  ```
+
+- **Run tests on specific browsers**
+  ```bash
+  npm run test:chromium
+  npm run test:firefox
+  npm run test:webkit
+  ```
+
+## 📖 Comprehensive Engineering Guide
+
+For an in-depth understanding of the architectural decisions, Git strategies, CI/CD setup, Prompt Engineering rules, and strict anti-patterns enforced in this framework, please read the **[Playwright Shopify Framework Guide](./playwright-shopify-framework-guide.md)** included in this repository.
