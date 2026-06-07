@@ -2,10 +2,12 @@ import { test, expect } from '../../fixtures/page-fixtures';
 import { testData } from '../../fixtures/test-data';
 import { expectLoginRejected } from '../../utils/assertions';
 
+// This top-level hook applies to EVERY test inside this file automatically
+test.beforeEach(async ({ pm }) => {
+  await pm.loginPage.goto();
+});
+
 test.describe('Login Page — UI Visibility', () => {
-  test.beforeEach(async ({ pm }) => {
-    await pm.loginPage.goto();
-  });
 
   test('UI-001 to UI-004: Core UI elements are visible', async ({ pm }) => {
     // Using soft assertions: if one element is missing, it won't stop the test,
@@ -18,9 +20,6 @@ test.describe('Login Page — UI Visibility', () => {
 });
 
 test.describe('Login Page — Validation (Data-Driven)', () => {
-  test.beforeEach(async ({ pm }) => {
-    await pm.loginPage.goto();
-  });
 
   for (const user of testData.invalidUsers) {
     test(`Invalid Login: ${user.description}`, async ({ page, pm }) => {
@@ -31,9 +30,6 @@ test.describe('Login Page — Validation (Data-Driven)', () => {
 });
 
 test.describe('Login Page — Functional', () => {
-  test.beforeEach(async ({ pm }) => {
-    await pm.loginPage.goto();
-  });
 
   test('FUN-001: Valid login redirects to account page', async ({ page, pm }) => {
     await pm.loginPage.login(testData.validUser.email, testData.validUser.password);
@@ -59,9 +55,6 @@ test.describe('Login Page — Functional', () => {
 });
 
 test.describe('Login Page — Security (Data-Driven)', () => {
-  test.beforeEach(async ({ pm }) => {
-    await pm.loginPage.goto();
-  });
 
   for (const payload of testData.securityPayloads) {
     test(`Security: ${payload.description}`, async ({ page, pm }) => {
