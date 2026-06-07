@@ -1,6 +1,7 @@
 import { Page } from '@playwright/test';
 import { LoginPage } from './LoginPage';
 import { ForgotPasswordPage } from './ForgotPasswordPage';
+import { RegisterPage } from './RegisterPage';
 
 /**
  * Page Object Manager that lazily instantiates pages.
@@ -9,6 +10,7 @@ import { ForgotPasswordPage } from './ForgotPasswordPage';
 export class PageManager {
   private _loginPage?: LoginPage;
   private _forgotPasswordPage?: ForgotPasswordPage;
+  private _registerPage?: RegisterPage;
 
   constructor(private readonly page: Page) {}
 
@@ -24,5 +26,12 @@ export class PageManager {
       this._forgotPasswordPage = new ForgotPasswordPage(this.page);
     }
     return this._forgotPasswordPage;
+  }
+
+  get registerPage(): RegisterPage {
+    if (!this._registerPage) {
+      this._registerPage = new RegisterPage(this.page);
+    }
+    return this._registerPage;
   }
 }

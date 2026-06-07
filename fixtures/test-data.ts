@@ -34,4 +34,20 @@ export const testData = {
     empty: '',
     invalid: 'notanemail',
   },
+
+  // Registration test data
+  registrationData: {
+    invalidUsers: [
+      { firstName: '', lastName: '', email: '', password: '', description: 'all fields empty' },
+      { firstName: 'Test', lastName: 'User', email: '', password: 'password123', description: 'empty email' },
+      { firstName: 'Test', lastName: 'User', email: 'test@example.com', password: '', description: 'empty password' },
+      { firstName: 'Test', lastName: 'User', email: 'notanemail', password: 'password123', description: 'invalid email format' },
+    ],
+    securityPayloads: [
+      { firstName: '<script>alert(1)</script>', lastName: 'User', email: 'xss1@example.com', password: 'password123', description: 'XSS in first name' },
+      { firstName: 'Test', lastName: '<script>alert(1)</script>', email: 'xss2@example.com', password: 'password123', description: 'XSS in last name' },
+      { firstName: "' OR 1=1 --", lastName: "User", email: 'sqli@example.com', password: 'password123', description: 'SQLi in first name' },
+      { firstName: 'A'.repeat(5000), lastName: 'User', email: 'long@example.com', password: 'password123', description: 'long first name' },
+    ]
+  }
 } as const;
